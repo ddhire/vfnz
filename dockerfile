@@ -1,4 +1,4 @@
-FROM centos
+FROM centos:latest
 
 MAINTAINER ddhire@gmail.com
 
