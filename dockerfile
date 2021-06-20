@@ -1,12 +1,20 @@
-FROM centos:latest
+FROM centos
+
 MAINTAINER ddhire@gmail.com
-yum install -y httpd \
-zip \
-unzip
-ADD https://www.free-css.com/assets/files/free-css-templates/download/page247/kindle.zip /var/www/html
-WORKDIR /var/www/html
-RUN unzip kindle.zip
-RUN cp -rvf markups-kindle/* .
-RUN rm -rf _MACOSX markups-kindle kindle.zip
-CMD ["/usr/sbin/httpd", ".D", "FOREGROUND"]
+
+RUN mkdir /opt/tomcat/
+
+WORKDIR /opt/tomcat
+RUN curl -O https://downloads.apache.org/tomcat/tomcat-8/v8.5.57/bin/apache-tomcat-8.5.57.tar.gz
+RUN tar xvfz apache*.tar.gz
+RUN mv apache-tomcat-8.5.57/* /opt/tomcat/.
+RUN yum -y install java
+RUN java -version
+
+
+WORKDIR /opt/tomcat/webapps
+COPY target/SampleWebApplication.war /opt/tomcat/webapps/SampleWebApplication.war
+
 EXPOSE 8080
+
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
